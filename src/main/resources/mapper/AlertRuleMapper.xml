@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.market.monitor.mapper.AlertRuleMapper">
+
+    <resultMap id="AlertRuleMap" type="com.market.monitor.model.AlertRule">
+        <id     property="id"               column="id"/>
+        <result property="name"             column="name"/>
+        <result property="assetType"        column="asset_type"/>
+        <result property="symbol"           column="symbol"/>
+        <result property="conditionType"    column="condition_type"/>
+        <result property="thresholdPrice"   column="threshold_price"/>
+        <result property="notifyChannel"    column="notify_channel"/>
+        <result property="notifyTarget"     column="notify_target"/>
+        <result property="enabled"          column="enabled"/>
+        <result property="cooldownMinutes"  column="cooldown_minutes"/>
+        <result property="lastTriggeredAt"  column="last_triggered_at"/>
+        <result property="createdAt"        column="created_at"/>
+        <result property="updatedAt"        column="updated_at"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="AlertRuleMap">
+        SELECT * FROM alert_rules ORDER BY created_at DESC
+    </select>
+
+    <select id="findById" resultMap="AlertRuleMap">
+        SELECT * FROM alert_rules WHERE id = #{id}
+    </select>
+
+    <select id="findAllEnabled" resultMap="AlertRuleMap">
+        SELECT * FROM alert_rules WHERE enabled = TRUE
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO alert_rules (
+            name, asset_type, symbol, condition_type, threshold_price,
+            notify_channel, notify_target, enabled, cooldown_minutes,
+            created_at, updated_at
+        ) VALUES (
+            #{name}, #{assetType}, #{symbol}, #{conditionType}, #{thresholdPrice},
+            #{notifyChannel}, #{notifyTarget}, #{enabled}, #{cooldownMinutes},
+            NOW(), NOW()
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE alert_rules SET
+            name             = #{name},
+            asset_type       = #{assetType},
+            symbol           = #{symbol},
+            condition_type   = #{conditionType},
+            threshold_price  = #{thresholdPrice},
+            notify_channel   = #{notifyChannel},
+            notify_target    = #{notifyTarget},
+            enabled          = #{enabled},
+            cooldown_minutes = #{cooldownMinutes},
+            updated_at       = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM alert_rules WHERE id = #{id}
+    </delete>
+
+    <update id="updateLastTriggeredAt">
+        UPDATE alert_rules
+        SET last_triggered_at = #{lastTriggeredAt}, updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <update id="toggleEnabled">
+        UPDATE alert_rules
+        SET enabled = #{enabled}, last_triggered_at = NULL, updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+</mapper>
