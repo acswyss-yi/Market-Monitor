@@ -30,7 +30,10 @@ public class AlertEvaluationService {
     private final NotificationRouter notificationRouter;
 
     public void evaluate() {
-        List<AlertRule> rules = alertRuleMapper.findAllEnabled();
+        evaluate(alertRuleMapper.findAllEnabled());
+    }
+
+    public void evaluate(List<AlertRule> rules) {
         log.debug("Evaluating {} enabled alert rule(s)", rules.size());
 
         for (AlertRule rule : rules) {

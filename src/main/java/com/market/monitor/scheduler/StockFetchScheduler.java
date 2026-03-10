@@ -35,7 +35,8 @@ public class StockFetchScheduler {
 
     @Scheduled(fixedRateString = "${app.scheduler.stock-interval-ms:15000}")
     public void fetchOneAndEvaluate() {
-        List<String> symbols = alertRuleMapper.findAllEnabled().stream()
+        var rules = alertRuleMapper.findAllEnabled();
+        List<String> symbols = rules.stream()
                 .filter(r -> r.getAssetType() == AssetType.STOCK)
                 .map(r -> r.getSymbol().toUpperCase())
                 .distinct()
@@ -53,7 +54,7 @@ public class StockFetchScheduler {
             String key = PriceCache.keyOf(AssetType.STOCK, symbol);
             priceCache.put(key, new MarketPriceDTO(symbol, AssetType.STOCK, price, LocalDateTime.now()));
             log.info("Cached STOCK {} = ${}", symbol, price);
-            alertEvaluationService.evaluate();
+            alertEvaluationService.evaluate(rules);
         });
     }
 }

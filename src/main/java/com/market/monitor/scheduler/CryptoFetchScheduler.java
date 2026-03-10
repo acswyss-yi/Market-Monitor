@@ -31,7 +31,8 @@ public class CryptoFetchScheduler {
 
     @Scheduled(fixedRateString = "${app.scheduler.crypto-interval-ms:300000}")
     public void fetchAndEvaluate() {
-        List<String> symbols = alertRuleMapper.findAllEnabled().stream()
+        var rules = alertRuleMapper.findAllEnabled();
+        List<String> symbols = rules.stream()
                 .filter(r -> r.getAssetType() == AssetType.CRYPTO)
                 .map(r -> r.getSymbol().toLowerCase())
                 .distinct()
@@ -51,6 +52,6 @@ public class CryptoFetchScheduler {
             log.info("Cached CRYPTO {} = ${}", symbol, price);
         });
 
-        alertEvaluationService.evaluate();
+        alertEvaluationService.evaluate(rules);
     }
 }
