@@ -35,6 +35,8 @@ mybatis:
 app:
   alpha-vantage:
     api-key: ${ALPHA_VANTAGE_API_KEY:demo}
+  coin-gecko:
+    api-key: ${COIN_GECKO_API_KEY:}
   scheduler:
     crypto-interval-ms: 300000   # 5 minutes
     stock-interval-ms: 15000     # 15 seconds (Alpha Vantage free: 5 req/min)
