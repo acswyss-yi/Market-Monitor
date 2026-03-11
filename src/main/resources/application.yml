@@ -38,10 +38,10 @@ app:
   coin-gecko:
     api-key: ${COIN_GECKO_API_KEY:}
   scheduler:
-    crypto-interval-ms: 300000   # 5 minutes
+    crypto-interval-ms: 60000    # 1 minute
     stock-interval-ms: 15000     # 15 seconds (Alpha Vantage free: 5 req/min)
   cache:
-    price-ttl-minutes: 10
+    price-ttl-minutes: 2
 
 springdoc:
   swagger-ui:
